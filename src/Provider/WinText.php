@@ -13,8 +13,9 @@ class WinText extends AbstractProvider
 
     /**
      * WinText Constructor
-     * @param Sender $sender
+     *
      * @version v1.0.32
+     *
      * @since v1.0.31
      */
     public function __construct(Sender $sender)
@@ -24,8 +25,11 @@ class WinText extends AbstractProvider
 
     /**
      * @return false|string
+     *
      * @throws RenderException
+     *
      * @version v1.0.32
+     *
      * @since v1.0.31
      */
     public function sendRequest()
@@ -39,14 +43,14 @@ class WinText extends AbstractProvider
         $backoff = $this->senderObject->getBackoff();
 
         $formParams = [
-            "token" => $config['token'],
-            "messagetype" => $config['messagetype'] ?? 1,
-            "ismasking" => $config['ismasking'] ?? 'false',
-            "masking" => $config['masking'] ?? 'null',
-            "SMSText" => $text,
+            'token' => $config['token'],
+            'messagetype' => $config['messagetype'] ?? 1,
+            'ismasking' => $config['ismasking'] ?? 'false',
+            'masking' => $config['masking'] ?? 'null',
+            'SMSText' => $text,
         ];
 
-        if (!is_array($mobile)) {
+        if (! is_array($mobile)) {
             $formParams['mobileno'] = Helper::ensureNumberStartsWith88($mobile);
         } else {
             /*foreach ($mobile as $element) {
@@ -55,7 +59,7 @@ class WinText extends AbstractProvider
             $formParams['mobileno'] = implode(',', $tempMobile);*/
         }
 
-        //dd($this->apiEndpoint, $formParams);
+        // dd($this->apiEndpoint, $formParams);
         $requestObject = new Request($this->apiEndpoint, [], $queue, [], $queueName, $tries, $backoff);
         $requestObject->setFormParams($formParams);
         $response = $requestObject->post(false, 60);
@@ -63,25 +67,27 @@ class WinText extends AbstractProvider
             return true;
         }
 
-
         $body = $response->getBody();
         $smsResult = $body->getContents();
 
         $data['number'] = $mobile;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
     /**
      * @throws RenderException
+     *
      * @version v1.0.32
+     *
      * @since v1.0.31
      */
     public function errorException()
     {
         $config = $this->senderObject->getConfig();
 
-        if (!array_key_exists('token', $config)) {
+        if (! array_key_exists('token', $config)) {
             throw new RenderException('token key is absent in configuration');
         }
     }

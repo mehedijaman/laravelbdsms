@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -20,7 +21,6 @@ class Esms extends AbstractProvider
 {
     /**
      * DianaHost constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -29,6 +29,7 @@ class Esms extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -38,8 +39,8 @@ class Esms extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'sender_id' => $config['sender_id'],
@@ -48,11 +49,11 @@ class Esms extends AbstractProvider
         ];
 
         $headers = [
-            'Authorization' => 'Bearer ' . $config['api_token'],
-            'Content-Type' => 'application/json'
+            'Authorization' => 'Bearer '.$config['api_token'],
+            'Content-Type' => 'application/json',
         ];
 
-        $requestObject = new Request('https://login.esms.com.bd/api/v3/sms/send', $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request('https://login.esms.com.bd/api/v3/sms/send', $query, $queue, [], $queueName, $tries, $backoff);
         $requestObject->setHeaders($headers)->setContentTypeJson(true);
         $response = $requestObject->post();
         if ($queue) {
@@ -64,6 +65,7 @@ class Esms extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -72,13 +74,12 @@ class Esms extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('api_token', $this->senderObject->getConfig())) {
+        if (! array_key_exists('api_token', $this->senderObject->getConfig())) {
             throw new ParameterException('api_token is absent in configuration');
         }
 
-        if (!array_key_exists('sender_id', $this->senderObject->getConfig())) {
+        if (! array_key_exists('sender_id', $this->senderObject->getConfig())) {
             throw new ParameterException('sender_id key is absent in configuration');
         }
     }
-
 }

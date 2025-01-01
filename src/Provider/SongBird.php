@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 04/10/24, 01:06 PM
  *  Copyright (c) 2024
@@ -25,7 +26,6 @@ class SongBird extends AbstractProvider
 
     /**
      * SongBird constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -34,6 +34,7 @@ class SongBird extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -45,7 +46,6 @@ class SongBird extends AbstractProvider
         $queueName = $this->senderObject->getQueueName();
         $tries = $this->senderObject->getTries();
         $backoff = $this->senderObject->getBackoff();
-
 
         $formParams = [
             'apikey' => $config['apikey'],
@@ -67,6 +67,7 @@ class SongBird extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -75,15 +76,15 @@ class SongBird extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('apikey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('apikey', $this->senderObject->getConfig())) {
             throw new ParameterException('apikey key is absent in configuration');
         }
 
-        if (!array_key_exists('secretkey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('secretkey', $this->senderObject->getConfig())) {
             throw new ParameterException('secretkey key is absent in configuration');
         }
 
-        if (!array_key_exists('callerID', $this->senderObject->getConfig())) {
+        if (! array_key_exists('callerID', $this->senderObject->getConfig())) {
             throw new ParameterException('callerID key is absent in configuration.');
         }
     }

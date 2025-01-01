@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -23,7 +24,6 @@ class Mobishasra extends AbstractProvider
 
     /**
      * BulkSmsBD constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -32,6 +32,7 @@ class Mobishasra extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws GuzzleException|RenderException
      */
     public function sendRequest()
@@ -47,7 +48,7 @@ class Mobishasra extends AbstractProvider
             'user' => $config['user'],
             'pwd' => $config['pwd'],
             'senderid' => $config['senderid'],
-            'mobileno' => '88' . $number,
+            'mobileno' => '88'.$number,
             'msgtext' => $text,
             'priority' => 'High',
             'CountryCode' => 'ALL',
@@ -63,22 +64,24 @@ class Mobishasra extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
     /**
      * @return void
+     *
      * @throws ParameterException
      */
     public function errorException()
     {
-        if (!array_key_exists('user', $this->senderObject->getConfig())) {
+        if (! array_key_exists('user', $this->senderObject->getConfig())) {
             throw new ParameterException('user key is absent in configuration');
         }
-        if (!array_key_exists('pwd', $this->senderObject->getConfig())) {
+        if (! array_key_exists('pwd', $this->senderObject->getConfig())) {
             throw new ParameterException('pwd key is absent in configuration');
         }
-        if (!array_key_exists('senderid', $this->senderObject->getConfig())) {
+        if (! array_key_exists('senderid', $this->senderObject->getConfig())) {
             throw new ParameterException('senderid key is absent in configuration');
         }
     }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -22,7 +23,6 @@ class SmsQ extends AbstractProvider
 
     /**
      * SmsQ constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -31,6 +31,7 @@ class SmsQ extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -40,8 +41,8 @@ class SmsQ extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'SenderId' => $config['sender_id'],
@@ -52,10 +53,10 @@ class SmsQ extends AbstractProvider
         ];
 
         $headers = [
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $requestObject->setHeaders($headers)->setContentTypeJson(true);
         $response = $requestObject->post();
         if ($queue) {
@@ -67,6 +68,7 @@ class SmsQ extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -76,18 +78,17 @@ class SmsQ extends AbstractProvider
     public function errorException()
     {
 
-        if (!array_key_exists('sender_id', $this->senderObject->getConfig())) {
+        if (! array_key_exists('sender_id', $this->senderObject->getConfig())) {
             throw new ParameterException('sender_id key is absent in configuration');
         }
 
-        if (!array_key_exists('api_key', $this->senderObject->getConfig())) {
+        if (! array_key_exists('api_key', $this->senderObject->getConfig())) {
             throw new ParameterException('api_key key is absent in configuration');
         }
 
-        if (!array_key_exists('client_id', $this->senderObject->getConfig())) {
+        if (! array_key_exists('client_id', $this->senderObject->getConfig())) {
             throw new ParameterException('client_id key is absent in configuration');
         }
 
     }
-
 }

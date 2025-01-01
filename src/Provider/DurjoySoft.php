@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/16/22, 12:56 AM
  *  Copyright (c) 2022
@@ -23,7 +24,6 @@ class DurjoySoft extends AbstractProvider
 
     /**
      * DurjoySoft constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -32,7 +32,9 @@ class DurjoySoft extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @return bool|string
+     *
      * @throws GuzzleException
      * @throws RenderException
      */
@@ -43,8 +45,8 @@ class DurjoySoft extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'ApiKey' => $config['ApiKey'],
@@ -54,7 +56,7 @@ class DurjoySoft extends AbstractProvider
             'IsUnicode' => 2,
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $response = $requestObject->get();
         if ($queue) {
             return true;
@@ -65,6 +67,7 @@ class DurjoySoft extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -73,12 +76,11 @@ class DurjoySoft extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('ApiKey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('ApiKey', $this->senderObject->getConfig())) {
             throw new ParameterException('ApiKey is absent in configuration');
         }
-        if (!array_key_exists('SenderID', $this->senderObject->getConfig())) {
+        if (! array_key_exists('SenderID', $this->senderObject->getConfig())) {
             throw new ParameterException('SenderID key is absent in configuration');
         }
     }
-
 }

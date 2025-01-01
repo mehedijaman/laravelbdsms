@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/28/21, 11:18 PM
  *  Copyright (c) 2021
@@ -29,8 +30,6 @@ interface ProviderRoadmap
     public function sendRequest();
 
     /**
-     * @param $result
-     * @param $data
      * @return mixed
      */
     public function generateReport($result, $data);

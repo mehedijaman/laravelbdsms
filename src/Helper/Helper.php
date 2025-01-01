@@ -6,9 +6,9 @@ class Helper
 {
     /**
      * Mobile Number Validation
-     * @param $number
-     * @return bool
+     *
      * @since v1.0.12
+     *
      * @version v1.0.12
      */
     public static function numberValidation($number): bool
@@ -22,9 +22,10 @@ class Helper
     }
 
     /**
-     * @param array $numbers
      * @return string
+     *
      * @since v1.0.12
+     *
      * @version v1.0.43.1-dev
      */
     public static function getCommaSeperatedNumbers(array $numbers)
@@ -33,9 +34,10 @@ class Helper
     }
 
     /**
-     * @param string $mobile
      * @return string
+     *
      * @since v1.0.12
+     *
      * @version v1.0.43.1-dev
      */
     public static function checkMobileNumberPrefixExistence(string $mobile)
@@ -44,19 +46,21 @@ class Helper
         if ($prefix === '880') {
             return $mobile;
         }
-        return '88' . $mobile;
+
+        return '88'.$mobile;
     }
 
     /**
-     * @param string $text
-     * @return string
      * @since v1.0.52.0-beta
+     *
      * @version v1.0.52.0-beta
      */
-    public static function ensureNumberStartsWith88(string $text): string {
-        if (!str_starts_with($text, '88')) {
-            $text = '88' . $text;
+    public static function ensureNumberStartsWith88(string $text): string
+    {
+        if (! str_starts_with($text, '88')) {
+            $text = '88'.$text;
         }
+
         return $text;
     }
 }

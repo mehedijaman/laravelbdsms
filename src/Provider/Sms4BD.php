@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -21,7 +22,6 @@ class Sms4BD extends AbstractProvider
 
     /**
      * SMS4BD constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -38,8 +38,8 @@ class Sms4BD extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'publickey' => $config['publickey'],
@@ -51,7 +51,7 @@ class Sms4BD extends AbstractProvider
             'message' => $text,
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $response = $requestObject->get();
         if ($queue) {
             return true;
@@ -60,6 +60,7 @@ class Sms4BD extends AbstractProvider
         $smsResult = $body->getContents();
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -68,19 +69,19 @@ class Sms4BD extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('publickey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('publickey', $this->senderObject->getConfig())) {
             throw new RenderException('publickey is absent in configuration');
         }
-        if (!array_key_exists('privatekey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('privatekey', $this->senderObject->getConfig())) {
             throw new RenderException('privatekey is absent in configuration');
         }
-        if (!array_key_exists('type', $this->senderObject->getConfig())) {
+        if (! array_key_exists('type', $this->senderObject->getConfig())) {
             throw new RenderException('type key is absent in configuration');
         }
-        if (!array_key_exists('sender', $this->senderObject->getConfig())) {
+        if (! array_key_exists('sender', $this->senderObject->getConfig())) {
             throw new RenderException('sender key is absent in configuration');
         }
-        if (!array_key_exists('delay', $this->senderObject->getConfig())) {
+        if (! array_key_exists('delay', $this->senderObject->getConfig())) {
             throw new RenderException('delay key is absent in configuration');
         }
 

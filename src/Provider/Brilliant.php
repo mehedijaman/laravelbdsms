@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/16/22, 12:56 AM
  *  Copyright (c) 2022
@@ -17,11 +18,10 @@ use Xenon\LaravelBDSms\Sender;
 
 class Brilliant extends AbstractProvider
 {
-    private string $apiEndpoint ='http://sms.brilliant.com.bd:6005/api/v2/SendSMS';
+    private string $apiEndpoint = 'http://sms.brilliant.com.bd:6005/api/v2/SendSMS';
 
     /**
      * Brilliant constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -38,8 +38,8 @@ class Brilliant extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'ApiKey' => $config['ApiKey'],
@@ -50,7 +50,7 @@ class Brilliant extends AbstractProvider
             'Is_Unicode' => true,
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $response = $requestObject->get();
         if ($queue) {
             return true;
@@ -61,6 +61,7 @@ class Brilliant extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -69,15 +70,14 @@ class Brilliant extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('ApiKey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('ApiKey', $this->senderObject->getConfig())) {
             throw new ParameterException('ApiKey is absent in configuration');
         }
-        if (!array_key_exists('ClientId', $this->senderObject->getConfig())) {
+        if (! array_key_exists('ClientId', $this->senderObject->getConfig())) {
             throw new ParameterException('ClientId key is absent in configuration');
         }
-        if (!array_key_exists('SenderId', $this->senderObject->getConfig())) {
+        if (! array_key_exists('SenderId', $this->senderObject->getConfig())) {
             throw new ParameterException('SenderId key is absent in configuration');
         }
     }
-
 }

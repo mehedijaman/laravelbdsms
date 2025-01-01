@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -23,8 +24,9 @@ class AjuraTech extends AbstractProvider
 
     /**
      * Ajuratech constructor.
-     * @param Sender $sender
+     *
      * @version v1.0.34
+     *
      * @since v1.0.34
      */
     public function __construct(Sender $sender)
@@ -34,10 +36,14 @@ class AjuraTech extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @return false|string
+     *
      * @throws GuzzleException
      * @throws RenderException
+     *
      * @since v1.0.34
+     *
      * @version v1.0.34
      */
     public function sendRequest()
@@ -47,8 +53,8 @@ class AjuraTech extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
         $query = [
             'apikey' => $config['apikey'],
             'secretkey' => $config['secretkey'],
@@ -57,7 +63,7 @@ class AjuraTech extends AbstractProvider
             'messageContent' => $text,
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $response = $requestObject->get();
         if ($queue) {
             return true;
@@ -68,23 +74,26 @@ class AjuraTech extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
     /**
      * @throws ParameterException
+     *
      * @version v1.0.34
+     *
      * @since v1.0.34
      */
     public function errorException()
     {
-        if (!array_key_exists('apikey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('apikey', $this->senderObject->getConfig())) {
             throw new ParameterException('apikey is absent in configuration');
         }
-        if (!array_key_exists('secretkey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('secretkey', $this->senderObject->getConfig())) {
             throw new ParameterException('secretkey is absent in configuration');
         }
-        if (!array_key_exists('callerID', $this->senderObject->getConfig())) {
+        if (! array_key_exists('callerID', $this->senderObject->getConfig())) {
             throw new ParameterException('callerID is absent in configuration');
         }
     }

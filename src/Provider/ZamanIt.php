@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 05/24/24, 12:06 AM
  *  Copyright (c) 2023
@@ -22,7 +23,6 @@ class ZamanIt extends AbstractProvider
 
     /**
      * ZamanIt constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -31,11 +31,11 @@ class ZamanIt extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
     {
-
 
         $number = $this->senderObject->getMobile();
         $text = $this->senderObject->getMessage();
@@ -65,6 +65,7 @@ class ZamanIt extends AbstractProvider
 
         $data['phone'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -73,18 +74,17 @@ class ZamanIt extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('api_key', $this->senderObject->getConfig())) {
+        if (! array_key_exists('api_key', $this->senderObject->getConfig())) {
             throw new ParameterException('api_key is absent in configuration');
         }
 
-        if (!array_key_exists('type', $this->senderObject->getConfig())) {
+        if (! array_key_exists('type', $this->senderObject->getConfig())) {
             throw new ParameterException('type key is absent in configuration');
         }
 
-        if (!array_key_exists('senderid', $this->senderObject->getConfig())) {
+        if (! array_key_exists('senderid', $this->senderObject->getConfig())) {
             throw new ParameterException('senderid key is absent in configuration');
         }
 
     }
-
 }

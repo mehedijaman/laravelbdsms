@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 02/02/23, 11:50 PM
  *  Copyright (c) 2023
@@ -20,7 +21,6 @@ class CustomGateway extends AbstractProvider
 {
     /**
      * Custom Gateway constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -29,6 +29,7 @@ class CustomGateway extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException|GuzzleException
      */
     public function sendRequest()
@@ -38,11 +39,11 @@ class CustomGateway extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
         $query = $config;
 
-        $requestObject = new Request($this->senderObject->url, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->senderObject->url, $query, $queue, [], $queueName, $tries, $backoff);
 
         if (isset($this->senderObject->headers)) {
             $requestObject->setHeaders($this->senderObject->headers);
@@ -59,6 +60,7 @@ class CustomGateway extends AbstractProvider
         $smsResult = $body->getContents();
         $data['number'] = $mobile;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -67,8 +69,8 @@ class CustomGateway extends AbstractProvider
      */
     final public function errorException(): void
     {
-        if (!isset($this->senderObject->url)) {
-            throw new RenderException("Url missing for custom gateway. Use setUrl() to set sms gateway endpoint ");
+        if (! isset($this->senderObject->url)) {
+            throw new RenderException('Url missing for custom gateway. Use setUrl() to set sms gateway endpoint ');
         }
     }
 }

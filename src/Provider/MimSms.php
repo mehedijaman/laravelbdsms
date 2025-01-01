@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -19,8 +20,9 @@ use Xenon\LaravelBDSms\Sender;
 
 /**
  * Class MimSms
- * @package Xenon\LaravelBDSmsLog\Provider
+ *
  * @version v1.0.20
+ *
  * @since v1.0.20
  */
 class MimSms extends AbstractProvider
@@ -29,8 +31,9 @@ class MimSms extends AbstractProvider
 
     /**
      * Mimsms constructor.
-     * @param Sender $sender
+     *
      * @version v1.0.20
+     *
      * @since v1.0.20
      */
     public function __construct(Sender $sender)
@@ -40,10 +43,14 @@ class MimSms extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @return bool|string
+     *
      * @throws GuzzleException
      * @throws RenderException
+     *
      * @version v1.0.20
+     *
      * @since v1.0.20
      */
     public function sendRequest()
@@ -51,8 +58,8 @@ class MimSms extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
         $text = $this->senderObject->getMessage();
         $number = $this->senderObject->getMobile();
 
@@ -64,7 +71,7 @@ class MimSms extends AbstractProvider
             'msg' => $text,
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $response = $requestObject->get();
         if ($queue) {
             return true;
@@ -75,25 +82,27 @@ class MimSms extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
     /**
      * @throws ParameterException
+     *
      * @version v1.0.20
+     *
      * @since v1.0.20
      */
     public function errorException()
     {
-        if (!array_key_exists('api_key', $this->senderObject->getConfig())) {
+        if (! array_key_exists('api_key', $this->senderObject->getConfig())) {
             throw new ParameterException('api_key is absent in configuration');
         }
-        if (!array_key_exists('type', $this->senderObject->getConfig())) {
+        if (! array_key_exists('type', $this->senderObject->getConfig())) {
             throw new ParameterException('type key is absent in configuration');
         }
-        if (!array_key_exists('senderid', $this->senderObject->getConfig())) {
+        if (! array_key_exists('senderid', $this->senderObject->getConfig())) {
             throw new ParameterException('senderid key is absent in configuration');
         }
     }
-
 }

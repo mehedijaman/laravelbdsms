@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -24,7 +25,6 @@ class SmartLabSms extends AbstractProvider
 
     /**
      * SmartLabSMS constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -33,6 +33,7 @@ class SmartLabSms extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws GuzzleException|RenderException
      */
     public function sendRequest()
@@ -52,7 +53,7 @@ class SmartLabSms extends AbstractProvider
             'smstext' => $text,
         ];
 
-        if (!is_array($mobile)) {
+        if (! is_array($mobile)) {
             $this->apiEndpoint .= '/smsapi';
             $query['msisdn'] = Helper::ensureNumberStartsWith88($mobile);
         } else {
@@ -74,6 +75,7 @@ class SmartLabSms extends AbstractProvider
 
         $data['number'] = $mobile;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -82,14 +84,14 @@ class SmartLabSms extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('user', $this->senderObject->getConfig())) {
+        if (! array_key_exists('user', $this->senderObject->getConfig())) {
             throw new ParameterException('user key is absent in configuration');
         }
-        if (!array_key_exists('password', $this->senderObject->getConfig())) {
+        if (! array_key_exists('password', $this->senderObject->getConfig())) {
             throw new ParameterException('password key is absent in configuration');
         }
 
-        if (!array_key_exists('sender', $this->senderObject->getConfig())) {
+        if (! array_key_exists('sender', $this->senderObject->getConfig())) {
             throw new ParameterException('sender key is absent in configuration');
         }
     }

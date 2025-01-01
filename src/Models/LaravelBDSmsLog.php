@@ -17,7 +17,7 @@ class LaravelBDSmsLog extends Model
     protected $fillable = [
         'provider',
         'request_json',
-        'response_json'
+        'response_json',
     ];
 
     /**

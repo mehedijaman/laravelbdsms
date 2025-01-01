@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -23,7 +24,6 @@ class Mobireach extends AbstractProvider
 
     /**
      * Mobireach constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -32,7 +32,9 @@ class Mobireach extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @return bool|string
+     *
      * @throws GuzzleException
      * @throws RenderException
      */
@@ -65,6 +67,7 @@ class Mobireach extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -73,18 +76,17 @@ class Mobireach extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('Username', $this->senderObject->getConfig())) {
+        if (! array_key_exists('Username', $this->senderObject->getConfig())) {
             throw new ParameterException('Username is absent in configuration');
         }
 
-        if (!array_key_exists('Password', $this->senderObject->getConfig())) {
+        if (! array_key_exists('Password', $this->senderObject->getConfig())) {
             throw new ParameterException('Password is absent in configuration');
         }
 
-        if (!array_key_exists('From', $this->senderObject->getConfig())) {
+        if (! array_key_exists('From', $this->senderObject->getConfig())) {
             throw new ParameterException('From is absent in configuration');
         }
 
     }
-
 }

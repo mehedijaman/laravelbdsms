@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 10/01/24, 03:10 AM
  *  Copyright (c) 2024
@@ -25,7 +26,6 @@ class SendMySms extends AbstractProvider
 
     /**
      * Sendmysms constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -34,6 +34,7 @@ class SendMySms extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -65,6 +66,7 @@ class SendMySms extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -73,10 +75,10 @@ class SendMySms extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('user', $this->senderObject->getConfig())) {
+        if (! array_key_exists('user', $this->senderObject->getConfig())) {
             throw new ParameterException('user key is absent in configuration');
         }
-        if (!array_key_exists('key', $this->senderObject->getConfig())) {
+        if (! array_key_exists('key', $this->senderObject->getConfig())) {
             throw new ParameterException('key is absent in configuration');
         }
 

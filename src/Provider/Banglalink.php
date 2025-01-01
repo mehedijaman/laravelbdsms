@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -22,7 +23,6 @@ class Banglalink extends AbstractProvider
 
     /**
      * Banglalink constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -31,6 +31,7 @@ class Banglalink extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -40,8 +41,8 @@ class Banglalink extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $formParams = [
             'userID' => $config['userID'],
@@ -51,7 +52,7 @@ class Banglalink extends AbstractProvider
             'message' => $text,
         ];
 
-        $requestObject = new Request($this->apiEndpoint, [], $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, [], $queue, [], $queueName, $tries, $backoff);
         $requestObject->setFormParams($formParams);
         $response = $requestObject->post();
         if ($queue) {
@@ -63,6 +64,7 @@ class Banglalink extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -71,14 +73,14 @@ class Banglalink extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('userID', $this->senderObject->getConfig())) {
+        if (! array_key_exists('userID', $this->senderObject->getConfig())) {
             throw new ParameterException('userID key is absent in configuration');
         }
 
-        if (!array_key_exists('passwd', $this->senderObject->getConfig())) {
+        if (! array_key_exists('passwd', $this->senderObject->getConfig())) {
             throw new ParameterException('passwd key is absent in configuration');
         }
-        if (!array_key_exists('sender', $this->senderObject->getConfig())) {
+        if (! array_key_exists('sender', $this->senderObject->getConfig())) {
             throw new ParameterException('sender key is absent in configuration');
         }
 

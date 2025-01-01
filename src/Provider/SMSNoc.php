@@ -12,8 +12,9 @@ class SMSNoc extends AbstractProvider
 
     /**
      * Infobip Constructor
-     * @param Sender $sender
+     *
      * @version v1.0.32
+     *
      * @since v1.0.31
      */
     public function __construct(Sender $sender)
@@ -22,23 +23,27 @@ class SMSNoc extends AbstractProvider
     }
 
     /**
-     * @param $config
      * @return string[]
+     *
      * @version v1.0.32
+     *
      * @since v1.0.31
      */
     private function getHeaders($config): array
     {
         return [
-            'Authorization' => 'Bearer ' . $config['bearer_token'],
+            'Authorization' => 'Bearer '.$config['bearer_token'],
             'Content-Type' => 'application/json',
         ];
     }
 
     /**
      * @return false|string
+     *
      * @throws RenderException
+     *
      * @version v1.0.32
+     *
      * @since v1.0.31
      */
     public function sendRequest()
@@ -46,19 +51,19 @@ class SMSNoc extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
         $text = $this->senderObject->getMessage();
         $number = $this->senderObject->getMobile();
 
         $query = [
             'recipient' => '+88'.$number,
             'message' => $text,
-            'type' => "plain",
+            'type' => 'plain',
             'sender_id' => $config['sender_id'],
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $requestObject->setHeaders($this->getHeaders($config))->setContentTypeJson(true);
 
         $response = $requestObject->post();
@@ -71,22 +76,25 @@ class SMSNoc extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
     /**
      * @throws RenderException
+     *
      * @version v1.0.32
+     *
      * @since v1.0.31
      */
     public function errorException()
     {
         $config = $this->senderObject->getConfig();
 
-        if (!array_key_exists('sender_id', $config)) {
+        if (! array_key_exists('sender_id', $config)) {
             throw new RenderException('sender_id key is absent in configuration');
         }
-        if (!array_key_exists('bearer_token', $config)) {
+        if (! array_key_exists('bearer_token', $config)) {
             throw new RenderException('bearer_token key is absent in configuration');
         }
     }

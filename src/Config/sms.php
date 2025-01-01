@@ -1,4 +1,5 @@
 <?php
+
 /*
 |--------------------------------------------------------------------------
 | Configuration For Multiple Gateways
@@ -78,7 +79,7 @@ return [
      | You can choose one according to need
      |-----------------------------------------------------------------------------------------------
      */
-    'log_driver' => 'database', //database, file
+    'log_driver' => 'database', // database, file
 
     /*
      *-----------------------------------------------------------------------------------------------
@@ -320,13 +321,12 @@ return [
             'token' => env('SMS_WINTEXT_TOKEN', ''),
             'messagetype' => env('SMS_WINTEXT_MESSAGE_TYPE', ''),
             'ismasking' => env('SMS_WINTEXT_IS_MASKING', ''),
-            'masking' => env('SMS_WINTEXT_MASKING',''),
+            'masking' => env('SMS_WINTEXT_MASKING', ''),
         ],
         ZamanIt::class => [
             'api_key' => env('SMS_ZAMANIT_API_KEY', ''),
             'type' => env('SMS_ZAMANIT_TYPE', ''),
             'senderid' => env('SMS_ZAMANIT_SENDER_ID', ''),
         ],
-    ]
+    ],
 ];
-

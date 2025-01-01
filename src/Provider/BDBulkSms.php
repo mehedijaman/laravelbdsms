@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/28/21, 11:18 PM
  *  Copyright (c) 2021
@@ -11,7 +12,6 @@
 
 namespace Xenon\LaravelBDSms\Provider;
 
-
 use Xenon\LaravelBDSms\Handler\ParameterException;
 use Xenon\LaravelBDSms\Request;
 use Xenon\LaravelBDSms\Sender;
@@ -19,9 +19,9 @@ use Xenon\LaravelBDSms\Sender;
 class BDBulkSms extends AbstractProvider
 {
     private string $apiEndpoint = 'http://api.greenweb.com.bd/api2.php';
+
     /**
      * BDBulkSms constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -38,15 +38,15 @@ class BDBulkSms extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'token' => $config['token'],
             'to' => $number,
             'message' => $text,
         ];
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
 
         $response = $requestObject->get();
         if ($queue) {
@@ -58,17 +58,19 @@ class BDBulkSms extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
 
     }
 
     /**
      * @return void
+     *
      * @throws ParameterException
      */
     public function errorException()
     {
-        if (!array_key_exists('token', $this->senderObject->getConfig())) {
+        if (! array_key_exists('token', $this->senderObject->getConfig())) {
             throw new ParameterException('token key is absent in configuration');
         }
     }

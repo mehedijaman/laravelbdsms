@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 26/10/23, 10:40 PM
  *  Copyright (c) 2023
@@ -21,7 +22,6 @@ class QuickSms extends AbstractProvider
 
     /**
      * QuickSms constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -30,6 +30,7 @@ class QuickSms extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -39,8 +40,8 @@ class QuickSms extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'api_key' => $config['api_key'],
@@ -50,18 +51,18 @@ class QuickSms extends AbstractProvider
         ];
 
         if (array_key_exists('type', $config)) {
-            $query ['type'] = $config['type'];
+            $query['type'] = $config['type'];
         }
 
         if (array_key_exists('scheduledDateTime', $config)) {
-            $query ['scheduledDateTime'] = $config['scheduledDateTime'];
+            $query['scheduledDateTime'] = $config['scheduledDateTime'];
         }
 
         if (is_array($mobile)) {
-            $query['contacts'] =  implode(',', $mobile);
+            $query['contacts'] = implode(',', $mobile);
         }
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $requestObject->setContentTypeJson(true);
 
         $response = $requestObject->post();
@@ -72,6 +73,7 @@ class QuickSms extends AbstractProvider
         $smsResult = $body->getContents();
         $data['number'] = $mobile;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -80,10 +82,10 @@ class QuickSms extends AbstractProvider
      */
     public function errorException(): void
     {
-        if (!array_key_exists('api_key', $this->senderObject->getConfig())) {
+        if (! array_key_exists('api_key', $this->senderObject->getConfig())) {
             throw new RenderException('api_key key is absent in configuration');
         }
-        if (!array_key_exists('senderid', $this->senderObject->getConfig())) {
+        if (! array_key_exists('senderid', $this->senderObject->getConfig())) {
             throw new RenderException('senderid key is absent in configuration');
         }
     }

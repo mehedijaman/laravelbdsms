@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 09/16/24, 12:14 AM
  *  Copyright (c) 2024
@@ -26,7 +27,6 @@ class DhorolaSms extends AbstractProvider
 
     /**
      * DhorolaSms constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -35,6 +35,7 @@ class DhorolaSms extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -74,6 +75,7 @@ class DhorolaSms extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -82,10 +84,10 @@ class DhorolaSms extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('apikey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('apikey', $this->senderObject->getConfig())) {
             throw new ParameterException('apikey key is absent in configuration');
         }
-        if (!array_key_exists('sender', $this->senderObject->getConfig())) {
+        if (! array_key_exists('sender', $this->senderObject->getConfig())) {
             throw new ParameterException('sender key is absent in configuration');
         }
 

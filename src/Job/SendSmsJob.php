@@ -18,9 +18,6 @@ class SendSmsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * @var array
-     */
     private array $jobDetails;
 
     /**
@@ -37,7 +34,6 @@ class SendSmsJob implements ShouldQueue
      */
     public $backoffSeconds = 60;
 
-
     /**
      * Create a new job instance.
      *
@@ -46,10 +42,10 @@ class SendSmsJob implements ShouldQueue
     public function __construct(array $jobDetails)
     {
         $this->jobDetails = $jobDetails;
-        if (isset($jobDetails['tries']) && is_integer($jobDetails['tries'])) {
+        if (isset($jobDetails['tries']) && is_int($jobDetails['tries'])) {
             $this->tries = $jobDetails['tries'];
         }
-        if (isset($jobDetails['backoff']) && is_integer($jobDetails['backoff'])) {
+        if (isset($jobDetails['backoff']) && is_int($jobDetails['backoff'])) {
             $this->backoffSeconds = $jobDetails['backoff'];
         }
     }
@@ -58,6 +54,7 @@ class SendSmsJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     *
      * @throws GuzzleException|JsonException
      */
     public function handle()
@@ -73,6 +70,7 @@ class SendSmsJob implements ShouldQueue
 
     /**
      * @return void
+     *
      * @throws JsonException
      */
     private function postMethodHandler()
@@ -88,7 +86,7 @@ class SendSmsJob implements ShouldQueue
             $log = [
                 'provider' => $this->jobDetails['requestUrl'],
                 'request_json' => json_encode($this->jobDetails['query'], JSON_THROW_ON_ERROR),
-                'response_json' => json_encode($smsResult, JSON_THROW_ON_ERROR)
+                'response_json' => json_encode($smsResult, JSON_THROW_ON_ERROR),
             ];
         } catch (GuzzleException|JsonException $e) {
 
@@ -103,6 +101,7 @@ class SendSmsJob implements ShouldQueue
 
     /**
      * @return void
+     *
      * @throws GuzzleException
      * @throws \JsonException
      */
@@ -120,7 +119,7 @@ class SendSmsJob implements ShouldQueue
             $log = [
                 'provider' => $this->jobDetails['requestUrl'],
                 'request_json' => json_encode($this->jobDetails['query'], JSON_THROW_ON_ERROR),
-                'response_json' => json_encode($smsResult, JSON_THROW_ON_ERROR)
+                'response_json' => json_encode($smsResult, JSON_THROW_ON_ERROR),
             ];
         } catch (GuzzleException $e) {
             $log = [
@@ -133,10 +132,6 @@ class SendSmsJob implements ShouldQueue
         $this->insertLoggerLog($log);
     }
 
-    /**
-     * @param array $log
-     * @return void
-     */
     private function insertLoggerLog(array $log): void
     {
         $config = Config::get('sms');
@@ -146,7 +141,7 @@ class SendSmsJob implements ShouldQueue
 
                 if ($config['log_driver'] === 'database') {
                     Logger::createLog($log);
-                } else if ($config['log_driver'] === 'file') {
+                } elseif ($config['log_driver'] === 'file') {
                     LaravelLog::info('laravelbdsms', $log);
                 }
             } else {

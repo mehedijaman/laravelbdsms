@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -23,7 +24,6 @@ class Lpeek extends AbstractProvider
 
     /**
      * Lpeek constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -32,6 +32,7 @@ class Lpeek extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -42,8 +43,8 @@ class Lpeek extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $data = [
             'auth' => [
@@ -60,7 +61,7 @@ class Lpeek extends AbstractProvider
             ],
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $data, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $data, $queue, [], $queueName, $tries, $backoff);
         $requestObject->setContentTypeJson(true);
         $response = $requestObject->post();
         if ($queue) {
@@ -72,6 +73,7 @@ class Lpeek extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -80,19 +82,18 @@ class Lpeek extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('acode', $this->senderObject->getConfig())) {
+        if (! array_key_exists('acode', $this->senderObject->getConfig())) {
             throw new ParameterException('acode is absent in configuration');
         }
 
-        if (!array_key_exists('apiKey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('apiKey', $this->senderObject->getConfig())) {
             throw new ParameterException('apiKey key is absent in configuration');
         }
-        if (!array_key_exists('requestID', $this->senderObject->getConfig())) {
+        if (! array_key_exists('requestID', $this->senderObject->getConfig())) {
             throw new ParameterException('requestID key is absent in configuration');
         }
-        if (!array_key_exists('masking', $this->senderObject->getConfig())) {
+        if (! array_key_exists('masking', $this->senderObject->getConfig())) {
             throw new ParameterException('masking key is absent in configuration');
         }
     }
-
 }

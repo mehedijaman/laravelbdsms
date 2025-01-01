@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -22,7 +23,6 @@ class SmsinBD extends AbstractProvider
 
     /**
      * DianaHost constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -31,6 +31,7 @@ class SmsinBD extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -40,8 +41,8 @@ class SmsinBD extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'api_token' => $config['api_token'],
@@ -50,7 +51,7 @@ class SmsinBD extends AbstractProvider
             'message' => $text,
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $response = $requestObject->post();
         if ($queue) {
             return true;
@@ -61,6 +62,7 @@ class SmsinBD extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -69,13 +71,12 @@ class SmsinBD extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('api_token', $this->senderObject->getConfig())) {
+        if (! array_key_exists('api_token', $this->senderObject->getConfig())) {
             throw new ParameterException('api_token is absent in configuration');
         }
 
-        if (!array_key_exists('senderid', $this->senderObject->getConfig())) {
+        if (! array_key_exists('senderid', $this->senderObject->getConfig())) {
             throw new ParameterException('senderid key is absent in configuration');
         }
     }
-
 }

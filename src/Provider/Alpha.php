@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 10/04/23, 11:50 PM
  *  Copyright (c) 2023
@@ -24,11 +25,10 @@ use Xenon\LaravelBDSms\Sender;
  */
 class Alpha extends AbstractProvider
 {
-    private $apiEndpoint ='https://api.sms.net.bd/sendsms';
+    private $apiEndpoint = 'https://api.sms.net.bd/sendsms';
 
     /**
      * Alpha SMS constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -37,6 +37,7 @@ class Alpha extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -46,8 +47,8 @@ class Alpha extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'api_key' => $config['api_key'],
@@ -72,7 +73,7 @@ class Alpha extends AbstractProvider
             $query['to'] = implode(',', $mobile);
         }
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
 
         $response = $requestObject->post();
         if ($queue) {
@@ -82,6 +83,7 @@ class Alpha extends AbstractProvider
         $smsResult = $body->getContents();
         $data['number'] = $mobile;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -90,7 +92,7 @@ class Alpha extends AbstractProvider
      */
     public function errorException(): void
     {
-        if (!array_key_exists('api_key', $this->senderObject->getConfig())) {
+        if (! array_key_exists('api_key', $this->senderObject->getConfig())) {
             throw new RenderException('api_key key is absent in configuration');
         }
     }

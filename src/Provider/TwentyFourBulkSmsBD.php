@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -26,7 +27,6 @@ class TwentyFourBulkSmsBD extends AbstractProvider
 
     /**
      * TwentyFourBulksSMSBD constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -35,7 +35,9 @@ class TwentyFourBulkSmsBD extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @return bool|string
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -50,7 +52,7 @@ class TwentyFourBulkSmsBD extends AbstractProvider
         $query = [
             'customer_id' => $config['customer_id'],
             'api_key' => $config['api_key'],
-            'mobile_no' => (is_array($number)) ? implode(',',$number) : $number,
+            'mobile_no' => (is_array($number)) ? implode(',', $number) : $number,
             'message' => $text,
         ];
 
@@ -65,6 +67,7 @@ class TwentyFourBulkSmsBD extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -73,11 +76,11 @@ class TwentyFourBulkSmsBD extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('customer_id', $this->senderObject->getConfig())) {
+        if (! array_key_exists('customer_id', $this->senderObject->getConfig())) {
             throw new ParameterException('customer_id key is absent in configuration');
         }
 
-        if (!array_key_exists('api_key', $this->senderObject->getConfig())) {
+        if (! array_key_exists('api_key', $this->senderObject->getConfig())) {
             throw new ParameterException('api_key key is absent in configuration');
         }
 

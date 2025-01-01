@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -28,7 +29,6 @@ class Grameenphone extends AbstractProvider
 
     /**
      * Grameenphone constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -37,6 +37,7 @@ class Grameenphone extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -46,22 +47,22 @@ class Grameenphone extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $formParams = [
             'username' => $config['username'],
             'password' => $config['password'],
-            'apicode' => 1, //1 – For Sending, 2 – Check CLI, 3 - For check credit balance, 4 – For Delivery report status, 5 - for SMS submit with delivery request, 6 - for SMS submit without delivery
+            'apicode' => 1, // 1 – For Sending, 2 – Check CLI, 3 - For check credit balance, 4 – For Delivery report status, 5 - for SMS submit with delivery request, 6 - for SMS submit without delivery
             'msisdn' => $number,
-            'countrycode' => "880", //880 for Bangladesh
-            'cli' => 2222, //2222 cli code
-            'messagetype' => $config['messagetype'], //1 – for Text, 3 – for Unicode(Bangla), 2 – for Flash
+            'countrycode' => '880', // 880 for Bangladesh
+            'cli' => 2222, // 2222 cli code
+            'messagetype' => $config['messagetype'], // 1 – for Text, 3 – for Unicode(Bangla), 2 – for Flash
             'messageid' => 0,
             'message' => $text,
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $formParams, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $formParams, $queue, [], $queueName, $tries, $backoff);
         $requestObject->setContentTypeJson(true);
         $response = $requestObject->post();
         if ($queue) {
@@ -73,6 +74,7 @@ class Grameenphone extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -81,22 +83,22 @@ class Grameenphone extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('username', $this->senderObject->getConfig())) {
+        if (! array_key_exists('username', $this->senderObject->getConfig())) {
             throw new ParameterException('username key is absent in configuration');
         }
 
-        if (!array_key_exists('password', $this->senderObject->getConfig())) {
+        if (! array_key_exists('password', $this->senderObject->getConfig())) {
             throw new ParameterException('password key is absent in configuration');
         }
 
-        if (!array_key_exists('messagetype', $this->senderObject->getConfig())) {
+        if (! array_key_exists('messagetype', $this->senderObject->getConfig())) {
             throw new ParameterException('messagetype key is absent in configuration. 1 for Text, 2 for Flash, 3 for Unicode(Bangla)');
         }
 
         $configMessageType = $this->senderObject->getConfig()['messagetype'];
-        $validMessageTypes = [1,2,3];
+        $validMessageTypes = [1, 2, 3];
 
-        if (!in_array($configMessageType, $validMessageTypes)) {
+        if (! in_array($configMessageType, $validMessageTypes)) {
             throw new ParameterException('Invalid messagetype. Set value 1 for Text, 2 for Flash, 3 for Unicode(Bangla)');
         }
 

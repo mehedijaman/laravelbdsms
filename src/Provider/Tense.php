@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -18,9 +19,10 @@ use Xenon\LaravelBDSms\Sender;
 class Tense extends AbstractProvider
 {
     private string $apiEndpoint = 'http://sms.tense.com.bd/api-sendsms';
+
     /**
      * Tense constructor.
-     * @param Sender $sender
+     *
      * @since v1.0.25
      */
     public function __construct(Sender $sender)
@@ -30,6 +32,7 @@ class Tense extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @since v1.0.25
      */
     public function sendRequest()
@@ -39,8 +42,8 @@ class Tense extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
         $query = [
             'user' => $config['user'],
             'password' => $config['password'],
@@ -50,7 +53,7 @@ class Tense extends AbstractProvider
             'text' => $text,
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $response = $requestObject->get();
         if ($queue) {
             return true;
@@ -61,27 +64,28 @@ class Tense extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
     /**
      * @throws ParameterException
+     *
      * @since v1.0.25
      */
     public function errorException()
     {
-        if (!array_key_exists('user', $this->senderObject->getConfig())) {
+        if (! array_key_exists('user', $this->senderObject->getConfig())) {
             throw new ParameterException('user is absent in configuration');
         }
-        if (!array_key_exists('password', $this->senderObject->getConfig())) {
+        if (! array_key_exists('password', $this->senderObject->getConfig())) {
             throw new ParameterException('password key is absent in configuration');
         }
-        if (!array_key_exists('campaign', $this->senderObject->getConfig())) {
+        if (! array_key_exists('campaign', $this->senderObject->getConfig())) {
             throw new ParameterException('campaign key is absent in configuration');
         }
-        if (!array_key_exists('masking', $this->senderObject->getConfig())) {
+        if (! array_key_exists('masking', $this->senderObject->getConfig())) {
             throw new ParameterException('masking key is absent in configuration');
         }
     }
-
 }

@@ -13,8 +13,9 @@ class SmsBangladesh extends AbstractProvider
 
     /**
      * SmsBangladesh Constructor
-     * @param Sender $sender
+     *
      * @version v1.0.32
+     *
      * @since v1.0.31
      */
     public function __construct(Sender $sender)
@@ -24,8 +25,11 @@ class SmsBangladesh extends AbstractProvider
 
     /**
      * @return false|string
+     *
      * @throws RenderException
+     *
      * @version v1.0.32
+     *
      * @since v1.0.31
      */
     public function sendRequest()
@@ -39,13 +43,13 @@ class SmsBangladesh extends AbstractProvider
         $backoff = $this->senderObject->getBackoff();
 
         $formParams = [
-            "user" => $config['user'],
-            "password" => $config['password'],
-            "from" => $config['from'],
-            "text" => urlencode($text),
+            'user' => $config['user'],
+            'password' => $config['password'],
+            'from' => $config['from'],
+            'text' => urlencode($text),
         ];
 
-        if (!is_array($mobile)) {
+        if (! is_array($mobile)) {
             $formParams['to'] = Helper::ensureNumberStartsWith88($mobile);
         } else {
             foreach ($mobile as $element) {
@@ -61,33 +65,35 @@ class SmsBangladesh extends AbstractProvider
             return true;
         }
 
-
         $body = $response->getBody();
         $smsResult = $body->getContents();
 
         $data['number'] = $mobile;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
     /**
      * @throws RenderException
+     *
      * @version v1.0.32
+     *
      * @since v1.0.31
      */
     public function errorException()
     {
         $config = $this->senderObject->getConfig();
 
-        if (!array_key_exists('user', $config)) {
+        if (! array_key_exists('user', $config)) {
             throw new RenderException('user key is absent in configuration');
         }
 
-        if (!array_key_exists('password', $config)) {
+        if (! array_key_exists('password', $config)) {
             throw new RenderException('password key is absent in configuration');
         }
 
-        if (!array_key_exists('from', $config)) {
+        if (! array_key_exists('from', $config)) {
             throw new RenderException('from key is absent in configuration');
         }
     }

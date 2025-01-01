@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -11,7 +12,6 @@
 
 namespace Xenon\LaravelBDSms\Provider;
 
-use GuzzleHttp\Exception\GuzzleException;
 use Xenon\LaravelBDSms\Handler\ParameterException;
 use Xenon\LaravelBDSms\Handler\RenderException;
 use Xenon\LaravelBDSms\Request;
@@ -23,7 +23,6 @@ class Robi extends AbstractProvider
 
     /**
      * Robi constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -32,6 +31,7 @@ class Robi extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -43,7 +43,6 @@ class Robi extends AbstractProvider
         $queueName = $this->senderObject->getQueueName();
         $tries = $this->senderObject->getTries();
         $backoff = $this->senderObject->getBackoff();
-
 
         $formParams = [
             'username' => $config['username'],
@@ -64,6 +63,7 @@ class Robi extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -72,13 +72,13 @@ class Robi extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('username', $this->senderObject->getConfig())) {
+        if (! array_key_exists('username', $this->senderObject->getConfig())) {
             throw new ParameterException('username key is absent in configuration');
         }
-        if (!array_key_exists('password', $this->senderObject->getConfig())) {
+        if (! array_key_exists('password', $this->senderObject->getConfig())) {
             throw new ParameterException('password key is absent in configuration');
         }
-        if (!array_key_exists('telcom_from', $this->senderObject->getConfig())) {
+        if (! array_key_exists('telcom_from', $this->senderObject->getConfig())) {
             throw new ParameterException('telcom_from key is absent in configuration');
         }
 

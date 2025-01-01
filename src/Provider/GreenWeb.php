@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -21,7 +22,6 @@ class GreenWeb extends AbstractProvider
 
     /**
      * GreenWeb constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -38,8 +38,8 @@ class GreenWeb extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'token' => $config['token'],
@@ -47,7 +47,7 @@ class GreenWeb extends AbstractProvider
             'message' => $text,
         ];
 
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $response = $requestObject->get();
         if ($queue) {
             return true;
@@ -58,6 +58,7 @@ class GreenWeb extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -66,7 +67,7 @@ class GreenWeb extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('token', $this->senderObject->getConfig())) {
+        if (! array_key_exists('token', $this->senderObject->getConfig())) {
             throw new ParameterException('token key is absent in configuration');
         }
     }

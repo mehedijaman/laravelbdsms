@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 10/04/23, 11:50 PM
  *  Copyright (c) 2023
@@ -21,7 +22,6 @@ class Muthofun extends AbstractProvider
 
     /**
      * Muthofun constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -30,6 +30,7 @@ class Muthofun extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      */
     public function sendRequest()
@@ -55,8 +56,8 @@ class Muthofun extends AbstractProvider
 
         $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
 
-        if (!str_starts_with($config['api_key'], "Token ")) {
-            $config['api_key'] = "Token " . $config['api_key'];
+        if (! str_starts_with($config['api_key'], 'Token ')) {
+            $config['api_key'] = 'Token '.$config['api_key'];
         }
         $requestObject->setHeaders(['Authorization' => $config['api_key']])->setContentTypeJson(true);
 
@@ -68,6 +69,7 @@ class Muthofun extends AbstractProvider
         $smsResult = $body->getContents();
         $data['number'] = $mobile;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -76,10 +78,10 @@ class Muthofun extends AbstractProvider
      */
     public function errorException(): void
     {
-        if (!array_key_exists('sender_id', $this->senderObject->getConfig())) {
+        if (! array_key_exists('sender_id', $this->senderObject->getConfig())) {
             throw new RenderException('sender_id key is absent in configuration');
         }
-        if (!array_key_exists('api_key', $this->senderObject->getConfig())) {
+        if (! array_key_exists('api_key', $this->senderObject->getConfig())) {
             throw new RenderException('api_key key is absent in configuration');
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/28/21, 11:18 PM
  *  Copyright (c) 2021
@@ -11,7 +12,6 @@
 
 namespace Xenon\LaravelBDSms\Handler;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -22,18 +22,12 @@ class RenderException extends \Exception
      *
      * @return void
      */
-    public function report()
-    {
-    }
+    public function report() {}
 
     /**
      * Render the exception into an HTTP response.
      *
-     * @param Request $request
      * @return void
      */
-    public function render(Request $request)
-    {
-
-    }
+    public function render(Request $request) {}
 }

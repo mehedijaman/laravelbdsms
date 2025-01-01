@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -21,7 +22,6 @@ class DianaSms extends AbstractProvider
 {
     /**
      * DianaHost constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -30,6 +30,7 @@ class DianaSms extends AbstractProvider
 
     /**
      * Send Request To Api and Send Message
+     *
      * @throws RenderException
      * @throws GuzzleException
      */
@@ -40,8 +41,8 @@ class DianaSms extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'ApiKey' => $config['ApiKey'],
@@ -51,7 +52,7 @@ class DianaSms extends AbstractProvider
             'Message' => $text,
         ];
 
-        $requestObject = new Request('https://q.dianasms.com/api/v2/SendSMS', $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request('https://q.dianasms.com/api/v2/SendSMS', $query, $queue, [], $queueName, $tries, $backoff);
         $response = $requestObject->get();
         if ($queue) {
             return true;
@@ -62,6 +63,7 @@ class DianaSms extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
 
     }
@@ -71,15 +73,14 @@ class DianaSms extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('ApiKey', $this->senderObject->getConfig())) {
+        if (! array_key_exists('ApiKey', $this->senderObject->getConfig())) {
             throw new ParameterException('ApiKey is absent in configuration');
         }
-        if (!array_key_exists('ClientId', $this->senderObject->getConfig())) {
+        if (! array_key_exists('ClientId', $this->senderObject->getConfig())) {
             throw new ParameterException('ClientId key is absent in configuration');
         }
-        if (!array_key_exists('SenderId', $this->senderObject->getConfig())) {
+        if (! array_key_exists('SenderId', $this->senderObject->getConfig())) {
             throw new ParameterException('SenderId key is absent in configuration');
         }
     }
-
 }

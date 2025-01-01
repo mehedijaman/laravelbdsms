@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/28/21, 11:18 PM
  *  Copyright (c) 2021
@@ -11,12 +12,10 @@
 
 namespace Xenon\LaravelBDSms\Provider;
 
-
 use Illuminate\Http\JsonResponse;
 
 class DnsBd extends AbstractProvider
 {
-
     public function getData()
     {
         // TODO: Implement getData() method.
@@ -32,10 +31,7 @@ class DnsBd extends AbstractProvider
         // TODO: Implement sendRequest() method.
     }
 
-    public function generateReport($result, $data): JsonResponse
-    {
-
-    }
+    public function generateReport($result, $data): JsonResponse {}
 
     /**
      * @return void

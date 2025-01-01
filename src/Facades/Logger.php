@@ -1,7 +1,8 @@
-<?php namespace Xenon\LaravelBDSms\Facades;
+<?php
+
+namespace Xenon\LaravelBDSms\Facades;
 
 use Illuminate\Support\Facades\Facade;
-
 
 /**
  * @method static Xenon\LaravelBDSms\Log\Log createLog(array $data)
@@ -18,8 +19,8 @@ use Illuminate\Support\Facades\Facade;
 class Logger extends Facade
 {
     /**
-     * @return string
      * @version v1.0.35
+     *
      * @since v1.0.35
      */
     protected static function getFacadeAccessor(): string

@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/29/21, 12:06 AM
  *  Copyright (c) 2021
@@ -17,11 +18,10 @@ use Xenon\LaravelBDSms\Sender;
 
 class DianaHost extends AbstractProvider
 {
-    private string $apiEndpoint ='http://esms.dianahost.com/smsapi';
+    private string $apiEndpoint = 'http://esms.dianahost.com/smsapi';
 
     /**
      * DianaHost constructor.
-     * @param Sender $sender
      */
     public function __construct(Sender $sender)
     {
@@ -38,8 +38,8 @@ class DianaHost extends AbstractProvider
         $config = $this->senderObject->getConfig();
         $queue = $this->senderObject->getQueue();
         $queueName = $this->senderObject->getQueueName();
-        $tries=$this->senderObject->getTries();
-        $backoff=$this->senderObject->getBackoff();
+        $tries = $this->senderObject->getTries();
+        $backoff = $this->senderObject->getBackoff();
 
         $query = [
             'api_key' => $config['api_key'],
@@ -49,8 +49,7 @@ class DianaHost extends AbstractProvider
             'msg' => $text,
         ];
 
-
-        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName,$tries,$backoff);
+        $requestObject = new Request($this->apiEndpoint, $query, $queue, [], $queueName, $tries, $backoff);
         $response = $requestObject->get();
         if ($queue) {
             return true;
@@ -61,6 +60,7 @@ class DianaHost extends AbstractProvider
 
         $data['number'] = $number;
         $data['message'] = $text;
+
         return $this->generateReport($smsResult, $data)->getContent();
     }
 
@@ -69,15 +69,14 @@ class DianaHost extends AbstractProvider
      */
     public function errorException()
     {
-        if (!array_key_exists('api_key', $this->senderObject->getConfig())) {
+        if (! array_key_exists('api_key', $this->senderObject->getConfig())) {
             throw new ParameterException('api_key is absent in configuration');
         }
-        if (!array_key_exists('type', $this->senderObject->getConfig())) {
+        if (! array_key_exists('type', $this->senderObject->getConfig())) {
             throw new ParameterException('type key is absent in configuration');
         }
-        if (!array_key_exists('senderid', $this->senderObject->getConfig())) {
+        if (! array_key_exists('senderid', $this->senderObject->getConfig())) {
             throw new ParameterException('senderid key is absent in configuration');
         }
     }
-
 }

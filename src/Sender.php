@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  Last Modified: 6/28/21, 11:18 PM
  *  Copyright (c) 2021
@@ -10,7 +11,6 @@
  */
 
 namespace Xenon\LaravelBDSms;
-
 
 use Exception;
 use Illuminate\Support\Facades\Config;
@@ -29,49 +29,32 @@ class Sender
      * @var AbstractProvider
      */
     private $provider;
-    /**
-     * @var
-     */
+
     private $message;
-    /**
-     * @var
-     */
+
     private $mobile;
-    /**
-     * @var
-     */
+
     private $config;
 
-    /**
-     * @var string
-     */
     public string $url;
-    /**
-     * @var
-     */
+
     public $method;
 
     public $tries = 3;
 
     public $backoff = 60;
 
-    /**
-     * @var bool
-     */
     private bool $queue = false;
-
 
     /**
      * @var Sender|null
      */
     private static $instance = null;
 
-
     /**
      * @var string
      */
     private $queueName = 'default';
-
 
     /*
     |------------------------------------------------------------------------------------------
@@ -83,6 +66,7 @@ class Sender
     | lets you subclass the Singleton class while keeping just one instance of each subclass around.
     */
     private array $headers;
+
     private bool $contentTypeJson;
 
     /**
@@ -90,14 +74,14 @@ class Sender
      */
     public static function getInstance(): Sender
     {
-        if (!File::exists(config_path('sms.php'))) {
+        if (! File::exists(config_path('sms.php'))) {
             throw new RenderException("missing config/sms.php. Be sure to run
             'php artisan vendor:publish --provider=Xenon\LaravelBDSms\LaravelBDSmsServiceProvider'
              and also set provider using setProvider() method. Set default provider from config/sms.php if
              you use Xenon\LaravelBDSms\Facades\SMS::shoot() facade. You can also clear your cache");
         }
 
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             self::$instance = new self;
         }
 
@@ -113,11 +97,12 @@ class Sender
     }
 
     /**
-     * @param mixed $method
+     * @param  mixed  $method
      */
     public function setMethod($method)
     {
         $this->method = $method;
+
         return self::$instance;
     }
 
@@ -130,12 +115,12 @@ class Sender
     }
 
     /**
-     * @param int $tries
      * @return $this
      */
     public function setTries(int $tries)
     {
         $this->tries = $tries;
+
         return $this;
     }
 
@@ -148,12 +133,12 @@ class Sender
     }
 
     /**
-     * @param int $backoff
      * @return $this
      */
     public function setBackoff(int $backoff)
     {
         $this->backoff = $backoff;
+
         return $this;
     }
 
@@ -166,40 +151,42 @@ class Sender
     }
 
     /**
-     * @param mixed $config
-     * @return Sender
+     * @param  mixed  $config
+     *
      * @throws Exception
+     *
      * @since v1.0.0
      */
     public function setConfig($config): Sender
     {
         $this->config = $config;
+
         return $this;
     }
 
     /**
-     * @param bool $queue
-     * @return Sender
      * @since v1.0.41.6-dev
      */
     public function setQueue(bool $queue): Sender
     {
         $this->queue = $queue;
+
         return $this;
     }
 
     /**
-     * @param string $queueName
      * @return $this
      */
     public function setQueueName(string $queueName): Sender
     {
         $this->queueName = $queueName;
+
         return $this;
     }
 
     /**
      * @return bool
+     *
      * @since v1.0.41.6-dev
      */
     public function getQueue()
@@ -209,32 +196,33 @@ class Sender
     }
 
     /**
-     * @param array $headers
-     * @param bool $contentTypeJson
-     * @return Sender
      * @throws RenderException
+     *
      * @since v1.0.55.0-beta
      */
     public function setHeaders(array $headers, bool $contentTypeJson = true): Sender
     {
         $this->headers = $headers;
         $this->contentTypeJson = $contentTypeJson;
+
         return self::getInstance();
     }
 
     /**
      * Send Message Finally
+     *
      * @throws ParameterException
+     *
      * @since v1.0.5
      */
     public function send()
     {
 
-        if (!is_array($this->getConfig())) {
-            throw  new ParameterException('config must be an array');
+        if (! is_array($this->getConfig())) {
+            throw new ParameterException('config must be an array');
         }
 
-        if (!$this->provider instanceof CustomGateway) { //empty check for all providers mobile and message
+        if (! $this->provider instanceof CustomGateway) { // empty check for all providers mobile and message
             if (empty($this->getMobile())) {
                 throw new ParameterException('Mobile number should not be empty');
             }
@@ -249,7 +237,7 @@ class Sender
         $config = Config::get('sms');
 
         $response = $this->provider->sendRequest();
-        if (!$this->getQueue()) {
+        if (! $this->getQueue()) {
             $this->logGenerate($config, $response);
         }
 
@@ -258,6 +246,7 @@ class Sender
 
     /**
      * @return mixed
+     *
      * @since v1.0.0
      */
     public function getMobile()
@@ -266,19 +255,22 @@ class Sender
     }
 
     /**
-     * @param mixed $mobile
-     * @return Sender
+     * @param  mixed  $mobile
+     *
      * @throws RenderException
+     *
      * @since v1.0.0
      */
     public function setMobile($mobile): Sender
     {
         $this->mobile = $mobile;
+
         return self::getInstance();
     }
 
     /**
      * @return mixed
+     *
      * @since v1.0.0
      */
     public function getMessage()
@@ -287,31 +279,35 @@ class Sender
     }
 
     /**
-     * @param mixed $message
-     * @return Sender
+     * @param  mixed  $message
+     *
      * @throws RenderException
+     *
      * @since v1.0.0
      */
     public function setMessage($message = ''): Sender
     {
 
         $this->message = $message;
+
         return self::getInstance();
     }
 
     /**
-     * @param string $url
      * @return $this
+     *
      * @throws RenderException
      */
     public function setUrl(string $url)
     {
         $this->url = $url;
+
         return self::getInstance();
     }
 
     /**
      * @return mixed
+     *
      * @since v1.0.0
      */
     public function getProvider()
@@ -321,21 +317,21 @@ class Sender
 
     /**
      * Return this class object
-     * @param $providerClass
-     * @return Sender
+     *
      * @throws RenderException
+     *
      * @since v1.0.0
      */
     public function setProvider($providerClass): Sender
     {
         try {
 
-            if (!class_exists($providerClass)) {
+            if (! class_exists($providerClass)) {
                 throw new RenderException("Sms Gateway Provider '$providerClass' not found. ");
             }
 
-            if (!is_subclass_of($providerClass, AbstractProvider::class)) {
-                throw new RenderException("Provider '$providerClass' is not a " . AbstractProvider::class);
+            if (! is_subclass_of($providerClass, AbstractProvider::class)) {
+                throw new RenderException("Provider '$providerClass' is not a ".AbstractProvider::class);
             }
         } catch (RenderException $exception) {
 
@@ -343,13 +339,11 @@ class Sender
         }
 
         $this->provider = new $providerClass($this);
+
         return $this;
     }
 
     /**
-     * @param $config
-     * @param $response
-     * @return void
      * @throws JsonException
      * @throws RenderException
      */
@@ -370,13 +364,13 @@ class Sender
             $requestData = [
                 'config' => $config['providers'][$providerClass],
                 'mobile' => $this->getMobile(),
-                'message' => $this->getMessage()
+                'message' => $this->getMessage(),
             ];
 
             $logData = [
                 'provider' => $providerClass,
                 'request_json' => json_encode($requestData, JSON_THROW_ON_ERROR),
-                'response_json' => json_encode($providerResponse, JSON_THROW_ON_ERROR)
+                'response_json' => json_encode($providerResponse, JSON_THROW_ON_ERROR),
             ];
 
             if (array_key_exists('log_driver', $config)) {
@@ -396,12 +390,8 @@ class Sender
         }
     }
 
-    /**
-     * @return string
-     */
     public function getQueueName(): string
     {
         return $this->queueName;
     }
-
 }
